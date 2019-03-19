@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "246826704530",
+    "firebase_url": "https://flutter-test-app-933d4.firebaseio.com",
+    "project_id": "flutter-test-app-933d4",
+    "storage_bucket": "flutter-test-app-933d4.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:246826704530:android:808156f8666c0928",
+        "android_client_info": {
+          "package_name": "com.benzneststudios.flutter_firebase_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "246826704530-0ds91nppqn381d8if101f681p5jbr98m.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA2NfHHNnReXN3AvTgripioQGbpGf3dASk"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
