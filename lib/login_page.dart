@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_firebase_app/home_page.dart';
 import 'package:flutter_firebase_app/register_page.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class MyLoginPage extends StatefulWidget {
   MyLoginPage({Key key}) : super(key: key);
@@ -13,7 +14,6 @@ class MyLoginPage extends StatefulWidget {
 
 class _MyLoginPageState extends State<MyLoginPage> {
   final FirebaseAuth _auth = FirebaseAuth.instance;
-  final FacebookAuthProvider _facebookAuthProvider = FacebookAuthProvider();
 
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
@@ -38,26 +38,27 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     colors: [Colors.green[200], Colors.green[300]])),
             child: Center(
                 child: ListView(shrinkWrap: true, children: <Widget>[
-              Container(
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(16),
-                      gradient: LinearGradient(
-                          colors: [Colors.yellow[100], Colors.green[100]])),
-                  margin: EdgeInsets.all(32),
-                  padding: EdgeInsets.all(24),
-                  child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      buildTextFieldEmail(),
-                      buildTextFieldPassword(),
-                      buildButtonSignIn(context),
-                      buildOtherLine(),
-                      buildButtonFacebook(context),
-                      buildButtonRegister(context)
-                    ],
-                  )),
-            ]))));
+                  Container(
+                      decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(16),
+                          gradient: LinearGradient(
+                              colors: [Colors.yellow[100], Colors.green[100]])),
+                      margin: EdgeInsets.all(32),
+                      padding: EdgeInsets.all(24),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          buildTextFieldEmail(),
+                          buildTextFieldPassword(),
+                          buildButtonSignIn(context),
+                          buildOtherLine(),
+                          buildButtonFacebook(context),
+                          buildButtonGoogle(context),
+                          buildButtonRegister(context)
+                        ],
+                      )),
+                ]))));
   }
 
   Widget buildButtonSignIn(BuildContext context) {
@@ -111,6 +112,20 @@ class _MyLoginPageState extends State<MyLoginPage> {
         onTap: () => loginWithFacebook(context));
   }
 
+  Widget buildButtonGoogle(BuildContext context) {
+    return InkWell(
+        child: Container(
+            constraints: BoxConstraints.expand(height: 50),
+            child: Text("Login with Google ",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, color: Colors.blue[600])),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16), color: Colors.white),
+            margin: EdgeInsets.only(top: 12),
+            padding: EdgeInsets.all(12)),
+        onTap: () => loginWithGoogle(context));
+  }
+
   Container buildTextFieldEmail() {
     return Container(
         padding: EdgeInsets.all(12),
@@ -151,8 +166,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
   signIn(BuildContext context) {
     _auth
         .signInWithEmailAndPassword(
-            email: emailController.text.trim(),
-            password: passwordController.text.trim())
+        email: emailController.text.trim(),
+        password: passwordController.text.trim())
         .then((user) {
       print("signed in ${user.email}");
       checkAuth(context);
@@ -166,7 +181,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
   }
 
   Future checkAuth(BuildContext context) async {
-
     FirebaseUser user = await _auth.currentUser();
     if (user != null) {
       print("Already singed-in with");
@@ -185,9 +199,29 @@ class _MyLoginPageState extends State<MyLoginPage> {
     await _auth.signInWithCredential(
         FacebookAuthProvider.getCredential(accessToken: token));
     checkAuth(context);
+  }
 
-//    final graphResponse = await http.get(
-//        'https://graph.facebook.com/v2.12/me?fields=name,first_name,last_name,email&access_token=${token}');
-//    final profile = JSON.decode(graphResponse.body);
+  Future loginWithGoogle(BuildContext context) async {
+    GoogleSignIn _googleSignIn = GoogleSignIn(
+      scopes: [
+        'email',
+        'https://www.googleapis.com/auth/contacts.readonly',
+      ],
+    );
+
+    bool isSigned = await _googleSignIn.isSignedIn();
+    if(isSigned){
+      await _googleSignIn.signOut();
+    }
+
+//    GoogleSignInAccount user = await
+    _googleSignIn.signIn().then((user) async {
+      GoogleSignInAuthentication userAuth = await user.authentication;
+      await _auth.signInWithCredential(GoogleAuthProvider.getCredential(
+          idToken: userAuth.idToken, accessToken: userAuth.accessToken));
+      checkAuth(context);
+    }).catchError((error) {
+      print("ERROR " + error.message);
+    });
   }
 }
