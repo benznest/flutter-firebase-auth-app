@@ -1,6 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_firebase_app/forgot_password_page.dart';
 import 'package:flutter_firebase_app/home_page.dart';
+import 'package:flutter_firebase_app/phone_verify_page.dart';
 import 'package:flutter_firebase_app/register_page.dart';
 import 'package:flutter_facebook_login/flutter_facebook_login.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -38,27 +40,30 @@ class _MyLoginPageState extends State<MyLoginPage> {
                     colors: [Colors.green[200], Colors.green[300]])),
             child: Center(
                 child: ListView(shrinkWrap: true, children: <Widget>[
-                  Container(
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(16),
-                          gradient: LinearGradient(
-                              colors: [Colors.yellow[100], Colors.green[100]])),
-                      margin: EdgeInsets.all(32),
-                      padding: EdgeInsets.all(24),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          buildTextFieldEmail(),
-                          buildTextFieldPassword(),
-                          buildButtonSignIn(context),
-                          buildOtherLine(),
-                          buildButtonFacebook(context),
-                          buildButtonGoogle(context),
-                          buildButtonRegister(context)
-                        ],
-                      )),
-                ]))));
+              Container(
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(16),
+                      gradient: LinearGradient(
+                          colors: [Colors.yellow[100], Colors.green[100]])),
+                  margin: EdgeInsets.all(32),
+                  padding: EdgeInsets.all(24),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.max,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      buildTextFieldEmail(),
+                      buildTextFieldPassword(),
+                      buildButtonSignIn(context),
+                      buildOtherLine("Don’t have an account?"),
+//                      buildButtonFacebook(context),
+//                      buildButtonGoogle(context),
+//                      buildButtonPhone(context),
+                      buildButtonRegister(context),
+                      buildOtherLine("Other"),
+                      buildButtonForgotPassword(context),
+                    ],
+                  )),
+            ]))));
   }
 
   Widget buildButtonSignIn(BuildContext context) {
@@ -126,6 +131,21 @@ class _MyLoginPageState extends State<MyLoginPage> {
         onTap: () => loginWithGoogle(context));
   }
 
+  Widget buildButtonPhone(BuildContext context) {
+    return InkWell(
+        child: Container(
+            constraints: BoxConstraints.expand(height: 50),
+            child: Text("Login with phone number",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, color: Colors.white)),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.pink[200]),
+            margin: EdgeInsets.only(top: 12),
+            padding: EdgeInsets.all(12)),
+        onTap: () => navigateToPhoneVerifyPage(context));
+  }
+
   Container buildTextFieldEmail() {
     return Container(
         padding: EdgeInsets.all(12),
@@ -150,14 +170,14 @@ class _MyLoginPageState extends State<MyLoginPage> {
             style: TextStyle(fontSize: 18)));
   }
 
-  Widget buildOtherLine() {
+  Widget buildOtherLine(String str) {
     return Container(
-        margin: EdgeInsets.only(top: 16),
+        margin: EdgeInsets.only(top: 14),
         child: Row(children: <Widget>[
           Expanded(child: Divider(color: Colors.green[800])),
           Padding(
               padding: EdgeInsets.all(6),
-              child: Text("Don’t have an account?",
+              child: Text(str,
                   style: TextStyle(color: Colors.black87))),
           Expanded(child: Divider(color: Colors.green[800])),
         ]));
@@ -166,8 +186,8 @@ class _MyLoginPageState extends State<MyLoginPage> {
   signIn(BuildContext context) {
     _auth
         .signInWithEmailAndPassword(
-        email: emailController.text.trim(),
-        password: passwordController.text.trim())
+            email: emailController.text.trim(),
+            password: passwordController.text.trim())
         .then((user) {
       print("signed in ${user.email}");
       checkAuth(context);
@@ -210,7 +230,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
     );
 
     bool isSigned = await _googleSignIn.isSignedIn();
-    if(isSigned){
+    if (isSigned) {
       await _googleSignIn.signOut();
     }
 
@@ -223,5 +243,31 @@ class _MyLoginPageState extends State<MyLoginPage> {
     }).catchError((error) {
       print("ERROR " + error.message);
     });
+  }
+
+  navigateToPhoneVerifyPage(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyPhoneVerifyPage()));
+  }
+
+
+  buildButtonForgotPassword(BuildContext context) {
+    return InkWell(
+        child: Container(
+            constraints: BoxConstraints.expand(height: 50),
+            child: Text("Forgot password",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, color: Colors.white)),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                color: Colors.red[300]),
+            margin: EdgeInsets.only(top: 12),
+            padding: EdgeInsets.all(12)),
+        onTap: () => navigateToResetPasswordPage(context));
+  }
+
+  navigateToResetPasswordPage(BuildContext context) {
+    Navigator.push(
+        context, MaterialPageRoute(builder: (context) => MyResetPasswordPage()));
   }
 }

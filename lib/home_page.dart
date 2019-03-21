@@ -41,12 +41,14 @@ class _MyHomePageState extends State<MyHomePage> {
                 child:
                     Column(mainAxisSize: MainAxisSize.min, children: <Widget>[
           Text("Hello", style: TextStyle(fontSize: 26)),
-          Text(widget.user.email, style: TextStyle(fontSize: 16)),
+          Text(widget.user.email ?? widget.user.phoneNumber,
+              style: TextStyle(fontSize: 16)),
         ]))));
   }
 
   void signOut(BuildContext context) {
     _auth.signOut();
+
     Navigator.pushAndRemoveUntil(
         context,
         MaterialPageRoute(builder: (context) => MyLoginPage()),
