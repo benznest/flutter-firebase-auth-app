@@ -55,9 +55,9 @@ class _MyLoginPageState extends State<MyLoginPage> {
                       buildTextFieldPassword(),
                       buildButtonSignIn(context),
                       buildOtherLine("Don’t have an account?"),
-//                      buildButtonFacebook(context),
-//                      buildButtonGoogle(context),
-//                      buildButtonPhone(context),
+                      buildButtonFacebook(context),
+                      buildButtonGoogle(context),
+                      buildButtonPhone(context),
                       buildButtonRegister(context),
                       buildOtherLine("Other"),
                       buildButtonForgotPassword(context),
@@ -122,6 +122,20 @@ class _MyLoginPageState extends State<MyLoginPage> {
         child: Container(
             constraints: BoxConstraints.expand(height: 50),
             child: Text("Login with Google ",
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 18, color: Colors.blue[600])),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16), color: Colors.white),
+            margin: EdgeInsets.only(top: 12),
+            padding: EdgeInsets.all(12)),
+        onTap: () => loginWithGoogle(context));
+  }
+
+  Widget buildButtonMicrosoft(BuildContext context) {
+    return InkWell(
+        child: Container(
+            constraints: BoxConstraints.expand(height: 50),
+            child: Text("Login with Microsoft ",
                 textAlign: TextAlign.center,
                 style: TextStyle(fontSize: 18, color: Colors.blue[600])),
             decoration: BoxDecoration(
@@ -243,6 +257,11 @@ class _MyLoginPageState extends State<MyLoginPage> {
     }).catchError((error) {
       print("ERROR " + error.message);
     });
+  }
+
+  Future loginWithMicrosoft(BuildContext context) async {
+
+
   }
 
   navigateToPhoneVerifyPage(BuildContext context) {
