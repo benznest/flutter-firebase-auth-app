@@ -142,7 +142,7 @@ class _MyLoginPageState extends State<MyLoginPage> {
                 borderRadius: BorderRadius.circular(16), color: Colors.white),
             margin: EdgeInsets.only(top: 12),
             padding: EdgeInsets.all(12)),
-        onTap: () => loginWithGoogle(context));
+        onTap: () => loginWithMicrosoft(context));
   }
 
   Widget buildButtonPhone(BuildContext context) {
@@ -260,7 +260,6 @@ class _MyLoginPageState extends State<MyLoginPage> {
   }
 
   Future loginWithMicrosoft(BuildContext context) async {
-
 
   }
 
